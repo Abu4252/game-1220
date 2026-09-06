@@ -1,1 +1,1216 @@
+/* =========================================================
+   ABDULHODIY ❤️ ROBIYA BIBI
+   PREMIUM 3D ROMANTIC GAME
+   STYLE.CSS
+========================================================= */
 
+
+/* =========================================================
+   01 — RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+    background:
+        radial-gradient(
+            circle at 50% 30%,
+            #24102f 0%,
+            #100718 42%,
+            #050208 100%
+        );
+    color: #fff;
+    overscroll-behavior: none;
+    touch-action: none;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+button {
+    border: none;
+    outline: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+/* =========================================================
+   02 — LOADING SCREEN
+========================================================= */
+
+#loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(110, 35, 100, 0.55),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 50% 80%,
+            rgba(255, 55, 120, 0.12),
+            transparent 45%
+        ),
+        #050208;
+
+    transition:
+        opacity 0.8s ease,
+        visibility 0.8s ease;
+}
+
+#loading-screen.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loading-heart {
+    width: 92px;
+    height: 92px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 3rem;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 120, 170, 0.25),
+            rgba(255, 70, 120, 0.04)
+        );
+
+    box-shadow:
+        0 0 25px rgba(255, 80, 140, 0.35),
+        0 0 70px rgba(255, 50, 130, 0.18);
+
+    animation: loadingHeart 1.5s ease-in-out infinite;
+}
+
+#loading-screen h1 {
+    margin-top: 28px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(2rem, 7vw, 3.5rem);
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #fff,
+            #ffb5ce,
+            #fff
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+#loading-screen h1 span {
+    color: #ff648f;
+    -webkit-text-fill-color: #ff648f;
+}
+
+#loading-screen p {
+    margin-top: 10px;
+
+    max-width: 340px;
+
+    color: rgba(255, 255, 255, 0.6);
+
+    font-size: 0.82rem;
+    line-height: 1.7;
+}
+
+.loading-bar {
+    width: min(280px, 75vw);
+    height: 4px;
+
+    margin-top: 32px;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.08);
+}
+
+#loading-progress {
+    width: 0%;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff416c,
+            #ff8fab,
+            #fff
+        );
+
+    box-shadow:
+        0 0 15px rgba(255, 80, 140, 0.8);
+
+    transition: width 0.25s ease;
+}
+
+#loading-text {
+    margin-top: 12px;
+
+    font-size: 0.7rem;
+
+    color: rgba(255, 255, 255, 0.42);
+
+    letter-spacing: 1px;
+}
+
+@keyframes loadingHeart {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+}
+
+
+/* =========================================================
+   03 — AUTH SCREEN
+========================================================= */
+
+#auth-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+
+    overflow-y: auto;
+
+    background:
+        radial-gradient(
+            circle at 50% 10%,
+            rgba(148, 49, 112, 0.25),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 15% 80%,
+            rgba(255, 70, 130, 0.08),
+            transparent 30%
+        ),
+        #050208;
+}
+
+.auth-background {
+    position: relative;
+
+    width: 100%;
+    min-height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        max(30px, env(safe-area-inset-top))
+        20px
+        max(30px, env(safe-area-inset-bottom));
+}
+
+
+/* =========================================================
+   STAR FIELD
+========================================================= */
+
+.stars,
+.stars::before,
+.stars::after {
+    position: absolute;
+
+    width: 2px;
+    height: 2px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    content: "";
+}
+
+.stars {
+    top: 15%;
+    left: 20%;
+
+    opacity: 0.45;
+
+    box-shadow:
+        10vw 5vh rgba(255,255,255,.5),
+        20vw 15vh rgba(255,255,255,.25),
+        35vw 3vh rgba(255,255,255,.6),
+        50vw 18vh rgba(255,255,255,.35),
+        65vw 7vh rgba(255,255,255,.5),
+        80vw 20vh rgba(255,255,255,.3),
+        90vw 5vh rgba(255,255,255,.45),
+        15vw 45vh rgba(255,255,255,.3),
+        30vw 55vh rgba(255,255,255,.4),
+        55vw 48vh rgba(255,255,255,.25),
+        72vw 60vh rgba(255,255,255,.5),
+        88vw 42vh rgba(255,255,255,.35),
+        5vw 75vh rgba(255,255,255,.4),
+        25vw 85vh rgba(255,255,255,.3),
+        45vw 78vh rgba(255,255,255,.5),
+        70vw 88vh rgba(255,255,255,.35),
+        94vw 78vh rgba(255,255,255,.4);
+
+    animation: starTwinkle 5s ease-in-out infinite alternate;
+}
+
+@keyframes starTwinkle {
+
+    from {
+        opacity: 0.25;
+    }
+
+    to {
+        opacity: 0.7;
+    }
+}
+
+
+/* =========================================================
+   AUTH CARD
+========================================================= */
+
+.auth-card {
+    position: relative;
+    z-index: 5;
+
+    width: min(440px, 100%);
+
+    padding: 34px 26px 28px;
+
+    border-radius: 30px;
+
+    border: 1px solid rgba(255, 135, 175, 0.22);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(37, 19, 47, 0.92),
+            rgba(13, 7, 20, 0.96)
+        );
+
+    box-shadow:
+        0 35px 90px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 0 60px rgba(255, 50, 130, 0.08);
+
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+
+    animation: authAppear 0.8s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes authAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.auth-heart {
+    width: 70px;
+    height: 70px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-size: 2rem;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 110, 160, .2),
+            rgba(255, 60, 120, .04)
+        );
+
+    border: 1px solid rgba(255, 130, 175, .2);
+
+    box-shadow:
+        0 0 35px rgba(255, 70, 130, .15);
+}
+
+.auth-card h1 {
+    text-align: center;
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: clamp(2rem, 8vw, 3rem);
+
+    font-weight: 600;
+
+    line-height: 1;
+
+    letter-spacing: .5px;
+}
+
+.auth-card h1 span {
+    color: #ff668f;
+}
+
+.auth-subtitle {
+    margin: 13px auto 28px;
+
+    max-width: 320px;
+
+    text-align: center;
+
+    color: rgba(255,255,255,.58);
+
+    font-size: .78rem;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   SECTION LABEL
+========================================================= */
+
+.section-label {
+    margin: 20px 0 10px;
+
+    text-align: center;
+
+    color: rgba(255, 170, 195, .72);
+
+    font-size: .58rem;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   ROLE SELECTOR
+========================================================= */
+
+.role-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+}
+
+.role-button {
+    min-height: 74px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 12px;
+
+    padding: 12px;
+
+    color: white;
+
+    cursor: pointer;
+
+    border-radius: 18px;
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    background:
+        rgba(255,255,255,.035);
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
+
+.role-button:active {
+    transform: scale(.97);
+}
+
+.role-button.selected {
+    border-color: rgba(255, 104, 145, .65);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 78, 122, .16),
+            rgba(255, 160, 190, .05)
+        );
+
+    box-shadow:
+        0 0 25px rgba(255, 60, 120, .1),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.role-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.06);
+
+    font-size: 1.45rem;
+}
+
+.role-button span:last-child {
+    display: flex;
+    flex-direction: column;
+
+    text-align: left;
+
+    gap: 3px;
+}
+
+.role-button strong {
+    font-size: .72rem;
+}
+
+.role-button small {
+    color: rgba(255,255,255,.4);
+
+    font-size: .55rem;
+}
+
+
+/* =========================================================
+   ROOM CODE
+========================================================= */
+
+.code-wrapper {
+    position: relative;
+}
+
+.code-wrapper input {
+    width: 100%;
+
+    height: 58px;
+
+    padding:
+        0
+        52px
+        0
+        20px;
+
+    border-radius: 17px;
+
+    outline: none;
+
+    color: white;
+
+    background:
+        rgba(0,0,0,.3);
+
+    border: 1px solid rgba(255, 110, 150, .25);
+
+    font-size: 1rem;
+
+    font-weight: 700;
+
+    letter-spacing: 3px;
+
+    text-align: center;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.code-wrapper input:focus {
+    border-color: rgba(255, 110, 150, .75);
+
+    box-shadow:
+        0 0 25px rgba(255, 70, 130, .1);
+}
+
+.code-lock {
+    position: absolute;
+
+    top: 50%;
+    right: 17px;
+
+    transform: translateY(-50%);
+
+    font-size: 1rem;
+
+    opacity: .6;
+}
+
+.code-hint {
+    margin-top: 9px;
+
+    text-align: center;
+
+    color: rgba(255,255,255,.3);
+
+    font-size: .58rem;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+========================================================= */
+
+.primary-button {
+    position: relative;
+
+    width: 100%;
+
+    min-height: 56px;
+
+    margin-top: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    border-radius: 17px;
+
+    color: white;
+
+    font-size: .78rem;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff416c,
+            #e92c68 45%,
+            #ff758c
+        );
+
+    box-shadow:
+        0 12px 35px rgba(255, 52, 108, .25),
+        inset 0 1px 0 rgba(255,255,255,.2);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.primary-button::before {
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 60%;
+    height: 100%;
+
+    content: "";
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.2),
+            transparent
+        );
+
+    transform: skewX(-20deg);
+
+    animation: buttonShine 4s infinite;
+}
+
+@keyframes buttonShine {
+
+    0% {
+        left: -100%;
+    }
+
+    20%,
+    100% {
+        left: 150%;
+    }
+}
+
+.primary-button:active {
+    transform: scale(.97);
+
+    box-shadow:
+        0 5px 20px rgba(255, 52, 108, .25);
+}
+
+.story-date {
+    margin-top: 22px;
+
+    text-align: center;
+
+    color: rgba(255,255,255,.28);
+
+    font-size: .56rem;
+
+    line-height: 1.7;
+}
+
+.story-date strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: rgba(255, 160, 190, .7);
+
+    font-size: .68rem;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   04 — GAME CONTAINER
+========================================================= */
+
+#game-container {
+    position: fixed;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    background: #07030b;
+
+    touch-action: none;
+}
+
+#world {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    z-index: 1;
+}
+
+#world canvas {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    touch-action: none;
+}
+
+
+/* =========================================================
+   05 — TOP HUD
+========================================================= */
+
+#top-hud {
+    position: absolute;
+
+    top: max(14px, env(safe-area-inset-top));
+
+    left: 0;
+    right: 0;
+
+    z-index: 50;
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: flex-start;
+
+    padding: 12px 14px;
+
+    pointer-events: none;
+}
+
+.hud-pill {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    min-width: 100px;
+
+    padding: 9px 12px;
+
+    border-radius: 16px;
+
+    border: 1px solid rgba(255,255,255,.09);
+
+    background:
+        rgba(9, 5, 16, .68);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.25);
+}
+
+.hud-icon {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: rgba(255, 80, 130, .1);
+
+    font-size: .9rem;
+}
+
+.hud-pill div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.hud-pill small {
+    color: rgba(255,255,255,.35);
+
+    font-size: .42rem;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+.hud-pill strong {
+    font-size: .58rem;
+
+    color: rgba(255,255,255,.85);
+}
+
+.connection-pill {
+    min-width: 118px;
+}
+
+.connection-dot {
+    width: 8px;
+    height: 8px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #f1a6b8;
+
+    box-shadow:
+        0 0 10px rgba(255,255,255,.2);
+}
+
+.connection-dot.online {
+    background: #65e6a1;
+
+    box-shadow:
+        0 0 12px rgba(60,255,160,.7);
+}
+
+.connection-dot.offline {
+    background: #f0a2b3;
+}
+
+
+/* =========================================================
+   06 — QUEST CARD
+========================================================= */
+
+#quest-card {
+    position: absolute;
+
+    top: 86px;
+    left: 50%;
+
+    z-index: 45;
+
+    width: min(390px, calc(100% - 110px));
+
+    transform: translateX(-50%);
+
+    padding: 13px 16px 14px;
+
+    text-align: center;
+
+    border-radius: 18px;
+
+    border: 1px solid rgba(255, 145, 175, .16);
+
+    background:
+        rgba(9, 5, 16, .72);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.25);
+
+    pointer-events: none;
+}
+
+.quest-number {
+    color: rgba(255, 160, 190, .65);
+
+    font-size: .45rem;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+#quest-title {
+    margin-top: 3px;
+
+    font-family: "Cormorant Garamond", serif;
+
+    color: #fff;
+
+    font-size: 1.2rem;
+
+    line-height: 1.1;
+}
+
+#quest-description {
+    margin-top: 5px;
+
+    color: rgba(255,255,255,.58);
+
+    font-size: .58rem;
+
+    line-height: 1.55;
+}
+
+.quest-progress {
+    width: 100%;
+    height: 2px;
+
+    margin-top: 9px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.06);
+}
+
+.quest-progress span {
+    display: block;
+
+    width: 8%;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff416c,
+            #ffafc6
+        );
+
+    box-shadow:
+        0 0 10px rgba(255,70,130,.5);
+
+    transition: width .4s ease;
+}
+
+
+/* =========================================================
+   07 — PARTNER STATUS
+========================================================= */
+
+#partner-status {
+    position: absolute;
+
+    top: 154px;
+    right: 14px;
+
+    z-index: 48;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 7px 9px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(8, 4, 14, .66);
+
+    border: 1px solid rgba(255,255,255,.07);
+
+    backdrop-filter: blur(15px);
+}
+
+.partner-avatar {
+    width: 29px;
+    height: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,100,150,.25),
+            rgba(255,60,100,.04)
+        );
+
+    font-size: .8rem;
+}
+
+.partner-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.partner-info strong {
+    color: rgba(255,255,255,.8);
+
+    font-size: .52rem;
+}
+
+.partner-info small {
+    color: rgba(255,255,255,.32);
+
+    font-size: .42rem;
+}
+
+.partner-heart {
+    color: #ff789d;
+
+    font-size: .9rem;
+
+    animation: partnerPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes partnerPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: .65;
+    }
+
+    50% {
+        transform: scale(1.15);
+        opacity: 1;
+    }
+}
+
+
+/* =========================================================
+   08 — VOICE PANEL
+========================================================= */
+
+#voice-panel {
+    position: absolute;
+
+    top: 215px;
+    right: 14px;
+
+    z-index: 48;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    pointer-events: auto;
+}
+
+.voice-button {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    color: white;
+
+    background:
+        rgba(12, 7, 20, .72);
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    backdrop-filter: blur(15px);
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,.25);
+
+    font-size: 1rem;
+
+    transition: .2s ease;
+}
+
+.voice-button.active {
+    background:
+        linear-gradient(
+            135deg,
+            #ff416c,
+            #ff758c
+        );
+
+    box-shadow:
+        0 0 25px rgba(255,65,108,.45);
+}
+
+.voice-button:active {
+    transform: scale(.9);
+}
+
+.voice-status {
+    max-width: 0;
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    white-space: nowrap;
+
+    color: rgba(255,255,255,.6);
+
+    font-size: .48rem;
+
+    transition:
+        max-width .3s ease,
+        opacity .3s ease;
+}
+
+#voice-panel.active .voice-status {
+    max-width: 100px;
+    opacity: 1;
+}
+
+
+/* =========================================================
+   09 — JOYSTICK
+========================================================= */
+
+#joystick {
+    position: absolute;
+
+    left: max(18px, env(safe-area-inset-left));
+    bottom: max(24px, env(safe-area-inset-bottom));
+
+    z-index: 100;
+
+    width: 142px;
+    height: 142px;
+
+    pointer-events: auto;
+
+    touch-action: none;
+}
+
+.joystick-ring {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.08),
+            rgba(255,255,255,.025)
+        );
+
+    border: 1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+        inset 0 0 25px rgba(255,255,255,.025),
+        0 15px 40px rgba(0,0,0,.3);
+
+   
