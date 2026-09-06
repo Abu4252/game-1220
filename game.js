@@ -78,7 +78,7 @@ const toastText = $("toast-text");
    GAME STATE
    ========================================================= */
 
-let selectedRole = null;
+let selectedRole = "abdulhodiy";
 let gameStarted = false;
 
 let currentStage = 1;
@@ -282,6 +282,11 @@ async function boot() {
   if (loadingScreen) {
     loadingScreen.classList.add("hidden");
   }
+   if (authScreen) {
+  authScreen.classList.remove("hidden");
+}
+
+updateStartButton();
 }
 
 function wait(ms) {
@@ -2014,7 +2019,8 @@ function showStageIntro(stage) {
   modalText.textContent =
     quest.description;
 
-  questModal?.classList.add("show");
+  questModal?.classList.remove("hidden");
+questModal?.classList.add("show");
 }
 
 function showCinematic(
@@ -2030,7 +2036,8 @@ function showCinematic(
   cinematicTitle.textContent = title;
   cinematicText.textContent = text;
 
-  cinematicOverlay.classList.add("show");
+  cinematicOverlay.classList.remove("hidden");
+cinematicOverlay.classList.add("show");
 }
 
 function closeCinematic() {
@@ -2707,7 +2714,8 @@ function stopAmbientMusic() {
    ========================================================= */
 
 function showFinalScreen() {
-  finalScreen?.classList.add("show");
+  questModal?.classList.remove("hidden");
+questModal?.classList.add("show");
 
   if (finalWaiting) {
     finalWaiting.textContent =
