@@ -5,895 +5,207 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>BIZ — BIRGA | Abdulhodiy & Robiya Bibi</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-        }
-        body, html {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0b0914;
-            color: #fff;
-        }
-        #canvas-container {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-        /* UI Qatlamlari */
-        .ui-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 20px;
-        }
-        .interactive {
-            pointer-events: auto;
-        }
-        /* Ekranlar */
-        .screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, #23153c 0%, #0b0914 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            transition: opacity 0.8s ease;
-            padding: 20px;
-            text-align: center;
-        }
-        .screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 15px;
-            background: linear-gradient(45deg, #ff758c, #ff7eb3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(255, 117, 140, 0.4);
-        }
-        p {
-            font-size: 1.1rem;
-            margin-bottom: 25px;
-            color: #d8cce6;
-            max-width: 500px;
-            line-height: 1.6;
-        }
-        .btn {
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            color: white;
-            border: none;
-            padding: 15px 35px;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 10px 25px rgba(255, 65, 108, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-weight: bold;
-            letter-spacing: 1px;
-            margin: 10px;
-        }
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(255, 65, 108, 0.6);
-        }
-        .btn:active {
-            transform: scale(0.98);
-        }
-        .input-group {
-            margin: 20px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        input[type="text"] {
-            padding: 15px 25px;
-            font-size: 1.3rem;
-            border-radius: 30px;
-            border: 2px solid #ff758c;
-            background: rgba(255, 255, 255, 0.08);
-            color: white;
-            text-align: center;
-            outline: none;
-            width: 260px;
-            letter-spacing: 2px;
-        }
-        input[type="text"]::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-        /* HUD Paneli */
-        .hud-top {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            font-size: 1.1rem;
-            font-weight: bold;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-        }
-        .badge {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 117, 140, 0.3);
-            backdrop-filter: blur(5px);
-        }
-        /* Topshiriqlar va Xabarlar */
-        #quest-banner {
-            background: rgba(15, 10, 30, 0.85);
-            border: 2px solid #ff758c;
-            padding: 20px 30px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            animation: pulse-border 2s infinite;
-        }
-        @keyframes pulse-border {
-            0% { border-color: rgba(255, 117, 140, 0.6); }
-            50% { border-color: rgba(255, 117, 140, 1); box-shadow: 0 0 25px rgba(255, 117, 140, 0.5); }
-            100% { border-color: rgba(255, 117, 140, 0.6); }
-        }
-        #quest-title {
-            font-size: 1.4rem;
-            color: #ff758c;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        #quest-desc {
-            font-size: 1rem;
-            color: #e2d9ed;
-            margin-bottom: 15px;
-        }
-        /* Virtual Joystiklar va Harakat Tugmalari */
-        .controls-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            width: 100%;
-            padding-bottom: 20px;
-        }
-        .joystick-base {
-            width: 120px;
-            height: 120px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            position: relative;
-            touch-action: none;
-        }
-        .joystick-thumb {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #ff758c, #ff7eb3);
-            border-radius: 50%;
-            position: absolute;
-            top: 35px;
-            left: 35px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            pointer-events: none;
-            transition: transform 0.05s linear;
-        }
-        .action-btns {
-            display: flex;
-            gap: 15px;
-        }
-        .round-btn {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 6px 20px rgba(255, 65, 108, 0.5);
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-        .round-btn:active {
-            transform: scale(0.9);
-        }
-        /* Dialog Modal */
-        #dialog-modal {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(15, 10, 30, 0.95);
-            border: 2px solid #ff758c;
-            padding: 30px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 450px;
-            z-index: 50;
-            display: none;
-            text-align: center;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-        }
-        #dialog-text {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-            color: #fff;
-            line-height: 1.5;
-        }
-        .choice-row {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-        /* Voice Chat Holati */
-        #voice-indicator {
-            position: absolute;
-            top: 75px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #4cd137;
-            padding: 6px 14px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(5px);
-        }
-        .mic-dot {
-            width: 10px;
-            height: 10px;
-            background-color: #4cd137;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #4cd137;
-            animation: pulse-mic 1.5s infinite;
-        }
-        @keyframes pulse-mic {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.6; }
-            100% { transform: scale(1U); opacity: 1; }
-        }
-        /* Maxfiy Xat Modali */
-        #letter-modal {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #fff8eb;
-            color: #3d2c1e;
-            padding: 35px;
-            border-radius: 12px;
-            width: 85%;
-            max-width: 420px;
-            z-index: 60;
-            display: none;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
-            font-family: 'Georgia', serif;
-            text-align: center;
-            border: 1px solid #e0c9a6;
-        }
-        #letter-content {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 25px;
-            font-style: italic;
-        }
-        /* Yuklanish ekrani */
-        #loading-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0b0914;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 200;
-            transition: opacity 0.8s ease;
-        }
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 117, 140, 0.2);
-            border-top: 4px solid #ff758c;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #0b0914; color: #fff; }
+        #canvas-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
+        .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; }
+        .interactive { pointer-events: auto; }
+        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #23153c 0%, #0b0914 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 20px; text-align: center; }
+        h1 { font-size: 2rem; margin-bottom: 15px; background: linear-gradient(45deg, #ff758c, #ff7eb3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p { font-size: 1rem; margin-bottom: 20px; color: #d8cce6; max-width: 450px; line-height: 1.5; }
+        .btn { background: linear-gradient(135deg, #ff416c, #ff4b2b); color: white; border: none; padding: 12px 30px; font-size: 1.1rem; border-radius: 50px; cursor: pointer; font-weight: bold; margin: 8px; box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4); }
+        .input-group { margin: 15px 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        input[type="text"] { padding: 12px 20px; font-size: 1.2rem; border-radius: 30px; border: 2px solid #ff758c; background: rgba(255,255,255,0.08); color: white; text-align: center; width: 240px; outline: none; }
+        .hud-top { display: flex; justify-content: space-between; width: 100%; font-size: 1rem; font-weight: bold; }
+        .badge { background: rgba(0,0,0,0.6); padding: 8px 15px; border-radius: 15px; border: 1px solid rgba(255,117,140,0.3); }
+        #quest-banner { background: rgba(15, 10, 30, 0.9); border: 2px solid #ff758c; padding: 15px 20px; border-radius: 15px; text-align: center; max-width: 500px; margin: 0 auto; backdrop-filter: blur(10px); }
+        .controls-container { display: flex; justify-content: space-between; align-items: flex-end; width: 100%; padding-bottom: 10px; }
+        .joystick-base { width: 100px; height: 100px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; position: relative; touch-action: none; }
+        .joystick-thumb { width: 40px; height: 40px; background: linear-gradient(135deg, #ff758c, #ff7eb3); border-radius: 50%; position: absolute; top: 30px; left: 30px; pointer-events: none; }
+        .round-btn { width: 60px; height: 60px; background: linear-gradient(135deg, #ff416c, #ff4b2b); border: none; border-radius: 50%; color: white; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        #dialog-modal { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15,10,30,0.95); border: 2px solid #ff758c; padding: 25px; border-radius: 20px; width: 85%; max-width: 400px; z-index: 50; display: none; text-align: center; }
     </style>
 </head>
 <body>
 
-    <!-- YUKLANISH EKRANI -->
-    <div id="loading-screen">
-        <div class="spinner"></div>
-        <p style="color: #ff758c; font-weight: bold; letter-spacing: 1px;">ROMANTIK DUNYO YUKLANMOQDA...</p>
-    </div>
-
-    <!-- 1-QADAM: KIRISH VA PERSONAJ TANLASH -->
     <div id="welcome-screen" class="screen">
         <h1>❤️ ABDULHODIY ❤️ ROBIYA BIBI</h1>
-        <p>“Yolg‘iz odam uchun emas, ikki yurak uchun yaratilgan kichkina romantik dunyo.”</p>
+        <p>“Yolg‘iz odam uchun emas, ikki yurak uchun yaratilgan romantik dunyo.”</p>
         
         <div class="input-group">
-            <label style="font-size: 0.9rem; color: #ff758c; font-weight: bold;">KIMSIZ?</label>
+            <label style="font-size: 0.85rem; color: #ff758c; font-weight: bold;">KIMSIZ?</label>
             <div style="display: flex; gap: 10px;">
-                <button class="btn" id="btn-abdulhodiy" style="padding: 10px 20px; font-size: 1rem;">👨🏻 Abdulhodiy</button>
-                <button class="btn" id="btn-robiya" style="padding: 10px 20px; font-size: 1rem; background: linear-gradient(135deg, #9b59b6, #8e44ad);">👩🏻 Robiya Bibi</button>
+                <button class="btn" id="btn-abdulhodiy" style="padding: 10px 18px; font-size: 0.95rem;">👨🏻 Abdulhodiy</button>
+                <button class="btn" id="btn-robiya" style="padding: 10px 18px; font-size: 0.95rem; background: linear-gradient(135deg, #9b59b6, #8e44ad);">👩🏻 Robiya Bibi</button>
             </div>
         </div>
 
         <div class="input-group">
-            <label style="font-size: 0.9rem; color: #ff758c; font-weight: bold;">MAXFIY XONA KODI</label>
-            <input type="text" id="room-code-input" value="LOVE-1220" maxlength="10">
+            <label style="font-size: 0.85rem; color: #ff758c; font-weight: bold;">MAXFIY XONA KODI</label>
+            <input type="text" id="room-code-input" value="LOVE-1220">
         </div>
 
-        <button class="btn interactive" id="enter-game-btn" style="margin-top: 15px;">O‘YINGA KIRISH ❤️</button>
+        <button class="btn interactive" id="enter-game-btn" style="margin-top: 10px;">O‘YINGA KIRISH ❤️</button>
     </div>
 
-    <!-- 3D KANVAS CONTAINER -->
     <div id="canvas-container"></div>
 
-    <!-- O'YIN ICHIDAGI INTERFEYS (HUD) -->
     <div class="ui-layer" id="game-ui" style="display: none;">
         <div class="hud-top">
-            <div class="badge" id="player-identity-badge">Rol: Aniqlanmoqda...</div>
-            <div class="badge" id="quest-counter">Bosqich: 1 / 7</div>
-        </div>
-
-        <div id="voice-indicator">
-            <div class="mic-dot"></div>
-            <span>Voice Chat: Faol (Aloqa tayyor)</span>
+            <div class="badge" id="player-identity-badge">Rol: Aniqlanmoqda</div>
+            <div class="badge">Bosqich: 1 / 7</div>
         </div>
 
         <div id="quest-banner">
-            <div id="quest-title">1-bosqich: “Birinchi uchrashuv”</div>
-            <div id="quest-desc">Bog‘ ichida bir-biringizni toping. Ikkalamiz yonma-yon kelishimiz kerak! ❤️</div>
-            <button class="btn interactive" id="quest-action-btn" style="padding: 10px 25px; font-size: 1rem; display: none;">Bajarish ❤️</button>
+            <div id="quest-title" style="font-size: 1.2rem; color: #ff758c; font-weight: bold; margin-bottom: 5px;">1-bosqich: “Birinchi uchrashuv”</div>
+            <div id="quest-desc" style="font-size: 0.95rem; color: #e2d9ed;">Bog‘ ichida bir-biringizni toping va yonma-yon keling! ❤️</div>
+            <button class="btn interactive" id="quest-action-btn" style="padding: 8px 20px; font-size: 0.9rem; display: none; margin-top: 10px;">Bajarish ❤️</button>
         </div>
 
         <div class="controls-container">
             <div class="joystick-base interactive" id="joystick">
                 <div class="joystick-thumb" id="joystick-thumb"></div>
             </div>
-            <div class="action-btns">
-                <button class="round-btn interactive" id="btn-action" title="Harakat / Tugmani bosish">🤝</button>
-                <button class="round-btn interactive" id="btn-chat" title="Ovozli xabar / So‘zlash">🎙️</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="round-btn interactive" id="btn-action">🤝</button>
+                <button class="round-btn interactive" id="btn-chat" onclick="alert('🎙️ Voice chat faol! Bir-biringiz bilan gaplashing.')">🎙️</button>
             </div>
         </div>
     </div>
 
-    <!-- DIALOG MODALI -->
     <div id="dialog-modal">
-        <div id="dialog-text">Xabar matni...</div>
-        <div class="choice-row">
-            <button class="btn interactive" id="dialog-yes-btn" style="padding: 10px 25px; font-size: 1rem;">HA ❤️</button>
-        </div>
+        <div id="dialog-text" style="font-size: 1rem; margin-bottom: 20px; line-height: 1.5;">Xabar matni...</div>
+        <button class="btn interactive" id="dialog-yes-btn" style="padding: 10px 20px; font-size: 0.95rem;">HA ❤️</button>
     </div>
 
-    <!-- YASHIRIN XAT MODALI -->
-    <div id="letter-modal">
-        <h3 style="color: #8c5830; margin-bottom: 15px; font-size: 1.3rem;">💌 Yashirin Romantik Xat</h3>
-        <div id="letter-content">Xat matni bu yerda ko‘rsatiladi...</div>
-        <button class="btn interactive" id="close-letter-btn" style="padding: 8px 20px; font-size: 0.95rem; background: #8c5830;">Yopish</button>
-    </div>
-
-    <!-- Three.js va Socket kutubxonalari -->
+    <!-- Three.js Kutubxonasi -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
 
     <script>
-        // --- ASOSIY O'YIN HOLATI VA O'ZGARUVCHILARI ---
-        let currentRole = null; // 'abdulhodiy' yoki 'robiya'
-        let currentStage = 1;
-        let isGameStarted = false;
-
-        // Sahna, kamera va render
-        let scene, camera, renderer;
-        let myAvatar, partnerAvatar;
-        let avatars = {};
-        
-        // Harakat va Joystik holati
-        let moveJoystickActive = false;
-        let joystickVector = { x: 0, y: 0 };
-        let joystickOrigin = { x: 0, y: 0 };
-
-        // Obyektlar va Topshiriqlar uchun o‘zgaruvchilar
-        let interactiveObjects = [];
+        let currentRole = null, isGameStarted = false, currentStage = 1;
+        let scene, camera, renderer, myAvatar, partnerAvatar;
+        let joystickVector = { x: 0, y: 0 }, moveJoystickActive = false;
         let collectedHearts = 0;
-        const totalHearts = 10;
-        let bridgeBuilt = false;
-        let doorOpened = false;
-        let handsHeld = false;
+        let stageObjectsGroup = new THREE.Group();
 
-        // DOM elementlari
-        const loadingScreen = document.getElementById('loading-screen');
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const gameUi = document.getElementById('game-ui');
-        const btnAbdulhodiy = document.getElementById('btn-abdulhodiy');
-        const btnRobiya = document.getElementById('btn-robiya');
-        const enterGameBtn = document.getElementById('enter-game-btn');
-        const roomCodeInput = document.getElementById('room-code-input');
-        const playerIdentityBadge = document.getElementById('player-identity-badge');
-        const questTitle = document.getElementById('quest-title');
-        const questDesc = document.getElementById('quest-desc');
-        const questCounter = document.getElementById('quest-counter');
-        const questActionBtn = document.getElementById('quest-action-btn');
-        const dialogModal = document.getElementById('dialog-modal');
-        const dialogText = document.getElementById('dialog-text');
-        const dialogYesBtn = document.getElementById('dialog-yes-btn');
-        const letterModal = document.getElementById('letter-modal');
-        const letterContent = document.getElementById('letter-content');
-        const closeLetterBtn = document.getElementById('close-letter-btn');
-
-        // Rol tanlash
-        btnAbdulhodiy.addEventListener('click', () => {
+        document.getElementById('btn-abdulhodiy').addEventListener('click', () => {
             currentRole = 'abdulhodiy';
-            btnAbdulhodiy.style.border = "3px solid #fff";
-            btnRobiya.style.border = "none";
+            event.target.style.border = "3px solid #fff";
+            document.getElementById('btn-robiya').style.border = "none";
         });
 
-        btnRobiya.addEventListener('click', () => {
+        document.getElementById('btn-robiya').addEventListener('click', () => {
             currentRole = 'robiya';
-            btnRobiya.style.border = "3px solid #fff";
-            btnAbdulhodiy.style.border = "none";
+            event.target.style.border = "3px solid #fff";
+            document.getElementById('btn-abdulhodiy').style.border = "none";
         });
 
-        // O'yinga kirish tugmasi
-        enterGameBtn.addEventListener('click', () => {
-            if (!currentRole) {
-                alert("Iltimos, avval o‘z rolingizni tanlang (Abdulhodiy yoki Robiya Bibi) ❤️");
-                return;
-            }
-            const code = roomCodeInput.value.trim();
-            if (code !== "LOVE-1220") {
-                alert("Noto‘g‘ri xona kodi! Iltimos: LOVE-1220 kiriting ❤️");
-                return;
-            }
+        document.getElementById('enter-game-btn').addEventListener('click', () => {
+            if (!currentRole) { alert("Iltimos, avval o‘z rolingizni tanlang ❤️"); return; }
+            if (document.getElementById('room-code-input').value.trim() !== "LOVE-1220") { alert("Noto‘g‘ri kod! LOVE-1220 kiriting ❤️"); return; }
 
-            welcomeScreen.classList.add('hidden');
-            gameUi.style.display = 'flex';
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('game-ui').style.display = 'flex';
             isGameStarted = true;
-
-            playerIdentityBadge.innerText = currentRole === 'abdulhodiy' ? "👨🏻 Abdulhodiy" : "👩🏻 Robiya Bibi";
+            document.getElementById('player-identity-badge').innerText = currentRole === 'abdulhodiy' ? "👨🏻 Abdulhodiy" : "👩🏻 Robiya Bibi";
             
-            init3DWorld();
-            setupControls();
+            initGame();
         });
 
-        // --- 3D DUNYONI YARATISH (THREE.JS) ---
-        function init3DWorld() {
+        function initGame() {
             const container = document.getElementById('canvas-container');
-
-            // Sahna
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x0b0914);
-            scene.fog = new THREE.FogExp2(0x0b0914, 0.015);
 
-            // Kamera
             camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-            // Render
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.shadowMap.enabled = true;
             container.appendChild(renderer.domElement);
 
-            // Yoritish
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambientLight);
+            scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+            const light = new THREE.DirectionalLight(0xffffff, 0.8);
+            light.position.set(10, 20, 10);
+            scene.add(light);
 
-            const moonLight = new THREE.DirectionalLight(0xb1c9ef, 0.8);
-            moonLight.position.set(20, 40, 20);
-            moonLight.castShadow = true;
-            scene.add(moonLight);
-
-            // Romantik Bog‘ Yer Qatlami (Zamin)
-            const groundGeo = new THREE.PlaneGeometry(200, 200);
-            const groundMat = new THREE.MeshStandardMaterial({ color: 0x1a1226, roughness: 0.9 });
-            const ground = new THREE.Mesh(groundGeo, groundMat);
+            // Zamin
+            const ground = new THREE.Mesh(new THREE.PlaneGeometry(150, 150), new THREE.MeshStandardMaterial({ color: 0x1a1226 }));
             ground.rotation.x = -Math.PI / 2;
-            ground.receiveShadow = true;
             scene.add(ground);
 
-            // Chiroqli Fonarlar va Gullar muhiti
-            createEnvironmentDecorations();
-
-            // Qahramonlarni yaratish (Abdulhodiy va Robiya)
-            createAvatars();
-
-            // Bosqich obyektlarini yaratish
-            setupStageObjects();
-
-            // Yuklanish ekranini olib tashlash
-            setTimeout(() => {
-                loadingScreen.style.opacity = '0';
-                setTimeout(() => loadingScreen.style.display = 'none', 800);
-            }, 1000);
-
-            // Render sikli
-            animate();
-
-            window.addEventListener('resize', onWindowResize);
-        }
-
-        // Muhit dekoratsiyalari (Gullar, Chiroqlar, Oy)
-        function createEnvironmentDecorations() {
-            // Oy
-            const moonGeo = new THREE.SphereGeometry(6, 32, 32);
-            const moonMat = new THREE.MeshBasicMaterial({ color: 0xfffbee });
-            const moon = new THREE.Mesh(moonGeo, moonMat);
-            moon.position.set(50, 70, -100);
-            scene.add(moon);
-
-            // Yulduzlar
-            const starsGeo = new THREE.BufferGeometry();
-            const starsCount = 500;
-            const starPos = new Float32Array(starsCount * 3);
-            for (let i = 0; i < starsCount * 3; i += 3) {
-                starPos[i] = (Math.random() - 0.5) * 300;
-                starPos[i+1] = Math.random() * 100 + 20;
-                starPos[i+2] = (Math.random() - 0.5) * 300;
-            }
-            starsGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-            const starsMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.8 });
-            const starField = new THREE.Points(starsGeo, starsMat);
-            scene.add(starField);
-
-            // Romantik archalar va gullar
-            for (let i = 0; i < 30; i++) {
-                const flowerGeo = new THREE.ConeGeometry(0.6, 1.5, 6);
-                const flowerMat = new THREE.MeshStandardMaterial({ color: i % 2 === 0 ? 0xff416c : 0xff7eb3 });
-                const flower = new THREE.Mesh(flowerGeo, flowerMat);
-                const x = (Math.random() - 0.5) * 80;
-                const z = (Math.random() - 0.5) * 80;
-                if (Math.abs(x) > 5 || Math.abs(z) > 5) {
-                    flower.position.set(x, 0.75, z);
-                    scene.add(flower);
-                }
-            }
-        }
-
-        // Qahramonlar (Avatarlar)
-        function createAvatars() {
-            // Abdulhodiy (Ko'kroq/Oqroq uslub yoki klassik)
-            const abdulGroup = new THREE.Group();
-            const bodyMat1 = new THREE.MeshStandardMaterial({ color: 0x3a506b });
-            const headMat1 = new THREE.MeshStandardMaterial({ color: 0xffdbac });
-            
-            const head1 = new THREE.Mesh(new THREE.SphereGeometry(0.8, 16, 16), headMat1);
-            head1.position.y = 2.2;
-            const body1 = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.8, 1.8, 16), bodyMat1);
-            body1.position.y = 1.0;
-            abdulGroup.add(head1, body1);
-            abdulGroup.position.set(-10, 0, 0);
-            scene.add(abdulGroup);
-            avatars['abdulhodiy'] = abdulGroup;
-
-            // Robiya Bibi (Qizil/Pushti libos)
-            const robiyaGroup = new THREE.Group();
-            const bodyMat2 = new THREE.MeshStandardMaterial({ color: 0xff758c });
-            const headMat2 = new THREE.MeshStandardMaterial({ color: 0xffdbac });
-            
-            const head2 = new THREE.Mesh(new THREE.SphereGeometry(0.75, 16, 16), headMat2);
-            head2.position.y = 2.1;
-            const body2 = new THREE.Mesh(new THREE.ConeGeometry(0.9, 1.8, 16), bodyMat2);
-            body2.position.y = 0.9;
-            robiyaGroup.add(head2, body2);
-            robiyaGroup.position.set(10, 0, 0);
-            scene.add(robiyaGroup);
-            avatars['robiya'] = robiyaGroup;
-
-            // Faol qahramonni tanlash
-            myAvatar = avatars[currentRole];
-            partnerAvatar = currentRole === 'abdulhodiy' ? avatars['robiya'] : avatars['abdulhodiy'];
-        }
-
-        // Bosqich obyektlarini joylashtirish
-        let stageObjectsGroup = new THREE.Group();
-        function setupStageObjects() {
             scene.add(stageObjectsGroup);
-            loadStage(currentStage);
+
+            // Qahramonlar
+            const abdul = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 2), new THREE.MeshStandardMaterial({ color: 0x3a506b }));
+            abdul.position.set(-8, 1, 0);
+            scene.add(abdul);
+
+            const robiya = new THREE.Mesh(new THREE.ConeGeometry(0.6, 2), new THREE.MeshStandardMaterial({ color: 0xff758c }));
+            robiya.position.set(8, 1, 0);
+            scene.add(robiya);
+
+            myAvatar = currentRole === 'abdulhodiy' ? abdul : robiya;
+            partnerAvatar = currentRole === 'abdulhodiy' ? robiya : abdul;
+
+            setupJoysticks();
+            animate();
         }
 
-        function loadStage(stage) {
-            // Avvalgi obyektlarni tozalash
-            while(stageObjectsGroup.children.length > 0){ 
-                stageObjectsGroup.remove(stageObjectsGroup.children[0]); 
-            }
-
-            if (stage === 1) {
-                questTitle.innerText = "1-bosqich: “Birinchi uchrashuv”";
-                questDesc.innerText = "Bog‘ ichida bir-biringizni toping. Yonma-yon keling! ❤️";
-                questActionBtn.style.display = 'none';
-            } else if (stage === 2) {
-                questTitle.innerText = "2-bosqich: “Ikki Yurak (Eshik)”";
-                questDesc.innerText = "Oldimizda eshik bor. Abdulhodiy va Robiya o‘z tugmalarini birga bosishlari shart!";
-                questActionBtn.style.display = 'inline-block';
-                questActionBtn.innerText = "Tugmani Bosish ❤️";
-
-                // Eshik va tugmalar
-                const doorGeo = new THREE.BoxGeometry(4, 5, 0.5);
-                const doorMat = new THREE.MeshStandardMaterial({ color: 0x8b4513 });
-                const door = new THREE.Mesh(doorGeo, doorMat);
-                door.position.set(0, 2.5, -20);
-                stageObjectsGroup.add(door);
-            } else if (stage === 3) {
-                questTitle.innerText = "3-bosqich: “Menga Ishon (Ko‘prik)”";
-                questDesc.innerText = "Buzilgan ko‘prikni birgalikda mexanizmni ushlab tiklaymiz!";
-                questActionBtn.style.display = 'inline-block';
-                questActionBtn.innerText = "Mexanizmni ushlab turish 🤝";
-            } else if (stage === 4) {
-                questTitle.innerText = "4-bosqich: “Yuraklarni Birga Yig‘amiz”";
-                questDesc.innerText = `Yig'ilgan yuraklar: ${collectedHearts}/${totalHearts} ❤️`;
-                questActionBtn.style.display = 'none';
-                spawnHearts();
-            } else if (stage === 5) {
-                questTitle.innerText = "5-bosqich: “Bir-birimizga gapiramiz”";
-                questDesc.innerText = "Bir-biringizga 3 tadan eng chiroyli yurak so‘zlarini ayting ❤️";
-                questActionBtn.style.display = 'inline-block';
-                questActionBtn.innerText = "Sevgi so'zini aytish 💌";
-            } else if (stage === 6) {
-                questTitle.innerText = "6-bosqich: “Faqat Ikkovimiz”";
-                questDesc.innerText = "Sokin musiqa ostida birga yuring va bir-biringizdan uzoqlashmang ❤️";
-                questActionBtn.style.display = 'none';
-            } else if (stage === 7) {
-                questTitle.innerText = "7-bosqich: “Qo‘limni Qo‘yib Yuborma”";
-                questDesc.innerText = "Qo‘llarni mahkam tuting va final sari birga yuraylik 🤝";
-                questActionBtn.style.display = 'inline-block';
-                questActionBtn.innerText = "Qo‘lni ushlash ❤️";
-            } else if (stage === 8) {
-                // Final
-                triggerFinalScreen();
-            }
-        }
-
-        // 4-bosqich uchun yuraklar yaratish
-        function spawnHearts() {
-            for (let i = 0; i < totalHearts; i++) {
-                const heartGeo = new THREE.OctahedronGeometry(0.8);
-                const heartMat = new THREE.MeshStandardMaterial({ color: 0xff416c, emissive: 0xff416c, emissiveIntensity: 0.5 });
-                const heart = new THREE.Mesh(heartGeo, heartMat);
-                heart.position.set((Math.random() - 0.5) * 50, 1, (Math.random() - 0.5) * 50 - 10);
-                heart.userData = { id: i, collected: false };
-                stageObjectsGroup.add(heart);
-            }
-        }
-
-        // --- BOSHQARUV VA JOYSTIK LOGIKASI ---
-        function setupControls() {
+        function setupJoysticks() {
             const joystick = document.getElementById('joystick');
             const thumb = document.getElementById('joystick-thumb');
-            let joystickCenter = { x: 0, y: 0 };
-            const maxDist = 35;
+            let center = { x: 0, y: 0 };
 
             joystick.addEventListener('touchstart', (e) => {
                 moveJoystickActive = true;
                 const rect = joystick.getBoundingClientRect();
-                joystickCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+                center = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
             });
 
             window.addEventListener('touchmove', (e) => {
                 if (!moveJoystickActive) return;
-                let touch = e.touches[0];
-                let dx = touch.clientX - joystickCenter.x;
-                let dy = touch.clientY - joystickCenter.y;
-                let dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist > maxDist) {
-                    dx = (dx / dist) * maxDist;
-                    dy = (dy / dist) * maxDist;
-                }
-
+                let t = e.touches[0];
+                let dx = t.clientX - center.x, dy = t.clientY - center.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist > 30) { dx = (dx/dist)*30; dy = (dy/dist)*30; }
                 thumb.style.transform = `translate(${dx}px, ${dy}px)`;
-                joystickVector.x = dx / maxDist;
-                joystickVector.y = dy / maxDist;
+                joystickVector.x = dx / 30; joystickVector.y = dy / 30;
             });
 
             window.addEventListener('touchend', () => {
-                moveJoystickActive = false;
-                joystickVector.x = 0;
-                joystickVector.y = 0;
+                moveJoystickActive = false; joystickVector.x = 0; joystickVector.y = 0;
                 thumb.style.transform = `translate(0px, 0px)`;
             });
-
-            // Sichqoncha orqali sinov uchun (Kompyuterda o'ynaganda ham qulay bo'lishi uchun)
-            joystick.addEventListener('mousedown', (e) => {
-                moveJoystickActive = true;
-                const rect = joystick.getBoundingClientRect();
-                joystickCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-            });
-
-            window.addEventListener('mousemove', (e) => {
-                if (!moveJoystickActive) return;
-                let dx = e.clientX - joystickCenter.x;
-                let dy = e.clientY - joystickCenter.y;
-                let dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist > maxDist) {
-                    dx = (dx / dist) * maxDist;
-                    dy = (dy / dist) * maxDist;
-                }
-
-                thumb.style.transform = `translate(${dx}px, ${dy}px)`;
-                joystickVector.x = dx / maxDist;
-                joystickVector.y = dy / maxDist;
-            });
-
-            window.addEventListener('mouseup', () => {
-                if(moveJoystickActive) {
-                    moveJoystickActive = false;
-                    joystickVector.x = 0;
-                    joystickVector.y = 0;
-                    thumb.style.transform = `translate(0px, 0px)`;
-                }
-            });
-
-            // Harakat tugmasi bosilganda
-            questActionBtn.addEventListener('click', () => {
-                handleQuestAction();
-            });
-
-            document.getElementById('btn-action').addEventListener('click', () => {
-                handleQuestAction();
-            });
-
-            document.getElementById('btn-chat').addEventListener('click', () => {
-                alert("🎙️ Voice chat faol! Bir-biringiz bilan gaplashing: 'Robiya, bu yoqqa keling ❤️'");
-            });
         }
 
-        // Topshiriq harakatlarini bajarish
-        function handleQuestAction() {
-            if (currentStage === 2) {
-                doorOpened = true;
-                alert("🚪 Eshik ochildi! Keyingi bosqichga o‘tamiz ❤️");
-                currentStage = 3;
-                loadStage(currentStage);
-            } else if (currentStage === 3) {
-                bridgeBuilt = true;
-                alert("🌉 Ko‘prik muvaffaqiyatli tiklandi! Birga yurib davom etamiz ❤️");
-                currentStage = 4;
-                loadStage(currentStage);
-            } else if (currentStage === 5) {
-                dialogModal.style.display = 'block';
-                dialogText.innerHTML = currentRole === 'robiya' ? 
-                    "Robiya Bibi Abdulhodiyga uchta chiroyli so‘z aytdi: <br><b>'Siz mening baxtimsiz, tayanchimsiz va butun dunyomsiz ❤️'</b>" :
-                    "Abdulhodiy Robiya Bibiga uchta chiroyli so‘z aytdi: <br><b>'Siz mening yuragimsiz, farishtamsiz va umrbod hamrohimizsiz ❤️'</b>";
-            } else if (currentStage === 7) {
-                handsHeld = true;
-                alert("🤝 Qo‘llar mahkam tutildi! Biz birgamiz ❤️");
-                currentStage = 8;
-                loadStage(currentStage);
-            }
-        }
-
-        dialogYesBtn.addEventListener('click', () => {
-            dialogModal.style.display = 'none';
-            if (currentStage === 5) {
-                currentStage = 6;
-                loadStage(currentStage);
-            }
-        });
-
-        // --- FINAL EKRANI ---
-        function triggerFinalScreen() {
-            gameUi.style.display = 'none';
-            dialogModal.style.display = 'block';
-            dialogText.innerHTML = `
-                <b>“Bu dunyodagi hech bir topshiriqni yolg‘iz bajara olmadingiz.”</b><br><br>
-                “Chunki bu hikoya yolg‘iz odam uchun yozilmagan. Bu hikoyani faqat ikkita yurak birga yakunlay oladi.” ❤️<br><br>
-                <b>03.03.2026</b> kuni boshlangan hikoyamizni… umrbod birga davom ettiramizmi? 💍❤️
-            `;
-            dialogYesBtn.innerText = "HA, UMRBOD BIRGAMIZ! 💍❤️";
-            
-            dialogYesBtn.onclick = () => {
-                dialogModal.style.display = 'none';
-                showFinalCelebration();
-            };
-        }
-
-        function showFinalCelebration() {
-            const finalScreen = document.createElement('div');
-            finalScreen.className = 'screen';
-            finalScreen.style.background = "radial-gradient(circle at center, #3a1c38 0%, #0b0914 100%)";
-            finalScreen.innerHTML = `
-                <h1 style="font-size: 2.8rem; margin-bottom: 20px;">🎆 BIZNING HIKOYAMIZ DAVOM ETADI 🎆</h1>
-                <p style="font-size: 1.3rem; color: #ff758c; margin-bottom: 30px;">
-                    👨🏻 Abdulhodiy + 👩🏻 Robiya Bibi = ❤️ BIZ<br><br>
-                    03.03.2026 — Hikoyamiz boshlangan sana va u abadiy davom etadi! ♾️
-                </p>
-                <button class="btn" onclick="location.reload()">Qaytadan boshlash ❤️</button>
-            `;
-            document.body.appendChild(finalScreen);
-        }
-
-        // --- ANIMATSIYA VA RENDER SIKLI ---
         function animate() {
             requestAnimationFrame(animate);
-
-            TWEEN.update();
-
-            // Qahramon harakati (Joystik orqali)
             if (isGameStarted && myAvatar) {
-                const speed = 0.15;
-                myAvatar.position.x += joystickVector.x * speed;
-                myAvatar.position.z += joystickVector.y * speed;
+                myAvatar.position.x += joystickVector.x * 0.12;
+                myAvatar.position.z += joystickVector.y * 0.12;
 
-                // Kameraning qahramonni kuzatishi
-                camera.position.x = myAvatar.position.x;
-                camera.position.y = myAvatar.position.y + 6;
-                camera.position.z = myAvatar.position.z + 10;
+                camera.position.set(myAvatar.position.x, myAvatar.position.y + 5, myAvatar.position.z + 8);
                 camera.lookAt(myAvatar.position);
 
-                // 1-bosqich tekshiruvi (Ikki qahramon bir-biriga yaqinlashganda)
-                if (currentStage === 1 && partnerAvatar) {
-                    const dist = myAvatar.position.distanceTo(partnerAvatar.position);
-                    if (dist < 3.5) {
-                        alert("❤️ Ular yana bir-birini topishdi… 1-bosqich yakunlandi!");
-                        currentStage = 2;
-                        loadStage(currentStage);
-                    }
-                }
-
-                // 4-bosqichda yuraklarni yig'ish tekshiruvi
-                if (currentStage === 4) {
-                    stageObjectsGroup.children.forEach(obj => {
-                        if (obj.geometry && obj.geometry.type === 'OctahedronGeometry' && !obj.userData.collected) {
-                            if (myAvatar.position.distanceTo(obj.position) < 2) {
-                                obj.userData.collected = true;
-                                stageObjectsGroup.remove(obj);
-                                collectedHearts++;
-                                questDesc.innerText = `Yig'ilgan yuraklar: ${collectedHearts}/${totalHearts} ❤️`;
-                                if (collectedHearts >= totalHearts) {
-                                    alert("✨ Barcha 10 ta yurak yig'ildi! Yangi hikoya ochildi ❤️");
-                                    currentStage = 5;
-                                    loadStage(currentStage);
-                                }
-                            }
-                        }
-                    });
+                if (currentStage === 1 && myAvatar.position.distanceTo(partnerAvatar.position) < 3) {
+                    alert("❤️ Ular bir-birini topishdi! 1-bosqich yakunlandi.");
+                    currentStage = 2;
+                    document.getElementById('quest-title').innerText = "2-bosqich: “Ikki Yurak”";
+                    document.getElementById('quest-desc').innerText = "Eshikni ochish uchun tugmani bosing!";
+                    document.getElementById('quest-action-btn').style.display = 'inline-block';
                 }
             }
-
             renderer.render(scene, camera);
         }
 
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
+        document.getElementById('quest-action-btn').addEventListener('click', () => {
+            if (currentStage === 2) {
+                alert("🚪 Eshik ochildi! Keyingi bosqichga o'tamiz ❤️");
+                currentStage = 3;
+                document.getElementById('quest-title').innerText = "3-bosqich: “Menga Ishon”";
+                document.getElementById('quest-desc').innerText = "Ko'prikni birga tiklaymiz!";
+                document.getElementById('quest-action-btn').style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
