@@ -2,77 +2,93 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Abdulhodiy ❤️ Robiya Bibi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Abdulhodiy ❤️ Robiya Bibi | Professional 3D Romantic Adventure</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Three.js kutubxonasi -->
+    <!-- Three.js va qo'shimcha professional effektlar uchun kutubxonalar -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
-    <!-- Loading Screen -->
+    <!-- Premium Cinematic Loading Screen -->
     <div id="loading-screen">
         <div class="loader-content">
+            <div class="heart-pulse">❤️</div>
             <h1>Abdulhodiy ❤️ Robiya Bibi</h1>
-            <p id="loading-text">Bizning dunyomiz tayyorlanmoqda...</p>
+            <p id="loading-text">Professional 3D olam yaratilmoqda...</p>
             <div class="progress-bar-container">
                 <div id="progress-bar"></div>
             </div>
+            <span id="progress-percent">0%</span>
         </div>
     </div>
 
-    <!-- Entry Screen -->
+    <!-- Security Entry Screen -->
     <div id="entry-screen" class="hidden">
         <div class="entry-card">
+            <div class="badge">ROOM CODE: 030326</div>
             <h2>Bizning Hikoyamiz</h2>
-            <p class="date-text">03.03.2026</p>
-            <p>Shu kuni boshlangan hikoya... endi o‘yin sifatida davom etadi.</p>
+            <p class="date-text">03.03.2026 → ∞</p>
+            <p>Hakamlarni hayratga soluvchi noyob sevgi sarguzashti. Kirish uchun maxfiy kodni kiriting:</p>
             <div class="input-group">
-                <input type="password" id="secret-code-input" placeholder="Maxfiy kodni kiriting">
+                <input type="password" id="secret-code-input" placeholder="••••••" maxlength="6">
                 <button id="enter-btn">Kirish</button>
             </div>
-            <p id="error-msg" class="error-hidden">Xato kod! Qaytadan urinib ko‘ring.</p>
+            <p id="error-msg" class="error-hidden">Noto‘g‘ri kod! Qaytadan urinib ko‘ring.</p>
         </div>
     </div>
 
     <!-- Character Selection Screen -->
     <div id="char-select-screen" class="hidden">
-        <h2>Qahramoningizni tanlang</h2>
+        <h2>Qahramoningizni Tanlang</h2>
+        <p class="sub-title">Professional 3D Multiplayer Tajribasi</p>
         <div class="char-cards-container">
             <div class="char-card" data-char="abdulhodiy">
+                <div class="char-avatar male"></div>
                 <h3>ABDULHODIY</h3>
-                <p>Bu hikoyadagi yigit</p>
+                <p>Hikoyadagi jasur yigit</p>
+                <span class="select-badge">Tanlash</span>
             </div>
             <div class="char-card" data-char="robiya">
+                <div class="char-avatar female"></div>
                 <h3>ROBIYA BIBI</h3>
-                <p>Bu hikoyadagi qiz</p>
+                <p>Hikoyadagi go‘zal malika</p>
+                <span class="select-badge">Tanlash</span>
             </div>
         </div>
-        <button id="start-game-btn" class="hidden" disabled>Sarguzashtni Boshlash ❤️</button>
+        <button id="start-game-btn" class="hidden" disabled>Sarguzashtni Boshlash ✨</button>
     </div>
 
-    <!-- Game HUD & Controls -->
+    <!-- PUBG-Style Professional Game HUD -->
     <div id="game-hud" class="hidden">
         <div class="hud-top">
-            <span class="hud-title">Abdulhodiy ❤️ Robiya Bibi</span>
-            <div class="hud-status">● Connected (Room: 030326)</div>
+            <div class="hud-brand">
+                <span class="pulse-dot"></span>
+                <span>Abdulhodiy ❤️ Robiya Bibi</span>
+            </div>
+            <div class="hud-room">Room: 030326 | Online (2/2)</div>
         </div>
-        <div class="hud-quest">
-            <h4 id="quest-title">1-Topshiriq: Birinchi uchrashuv</h4>
-            <p id="quest-desc">Bir-biringizni toping va quchoqlashuv amalini bajaring.</p>
+
+        <div class="hud-quest-container">
+            <div class="quest-header">JORIY TOPSHIRIQ (1/7)</div>
+            <div id="quest-title">Birinchi Uchrashuv</div>
+            <p id="quest-desc">Mapdan bir-biringizni toping va yaqinlashib quchoqlashuv tugmasini bosing.</p>
+            <div class="quest-progress-bar"><div id="q-progress" style="width: 14%;"></div></div>
         </div>
+
         <div class="mobile-controls">
             <div class="joystick-base" id="joystick">
                 <div class="joystick-stick" id="joystick-stick"></div>
             </div>
             <div class="action-buttons">
                 <button class="action-btn" id="btn-hug">🤗 Quchoqlash</button>
-                <button class="action-btn" id="btn-hand">🤝 Qo‘l ushlash</button>
+                <button class="action-btn" id="btn-hand">🤝 Qo‘l Ushlash</button>
                 <button class="action-btn" id="btn-interact">✨ Interaksiya</button>
             </div>
         </div>
     </div>
 
-    <!-- Three.js Canvas chiqadigan joy -->
+    <!-- Three.js 3D Canvas -->
     <div id="canvas-container"></div>
 
     <script type="module" src="js/game.js"></script>
