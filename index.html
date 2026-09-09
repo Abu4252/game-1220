@@ -2,9 +2,11 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Abdulhodiy ❤️ Robiya Bibi</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Three.js kutubxonasi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
     <!-- Loading Screen -->
@@ -24,17 +26,54 @@
             <h2>Bizning Hikoyamiz</h2>
             <p class="date-text">03.03.2026</p>
             <p>Shu kuni boshlangan hikoya... endi o‘yin sifatida davom etadi.</p>
-            
             <div class="input-group">
-                <input type="password" id="secret-code-input" placeholder="Toping-chi?">
+                <input type="password" id="secret-code-input" placeholder="Maxfiy kodni kiriting">
                 <button id="enter-btn">Kirish</button>
             </div>
             <p id="error-msg" class="error-hidden">Xato kod! Qaytadan urinib ko‘ring.</p>
         </div>
     </div>
 
-    <!-- Main Game Container (Keyingi fazalarda ishlatiladi) -->
-    <div id="game-container" class="hidden"></div>
+    <!-- Character Selection Screen -->
+    <div id="char-select-screen" class="hidden">
+        <h2>Qahramoningizni tanlang</h2>
+        <div class="char-cards-container">
+            <div class="char-card" data-char="abdulhodiy">
+                <h3>ABDULHODIY</h3>
+                <p>Bu hikoyadagi yigit</p>
+            </div>
+            <div class="char-card" data-char="robiya">
+                <h3>ROBIYA BIBI</h3>
+                <p>Bu hikoyadagi qiz</p>
+            </div>
+        </div>
+        <button id="start-game-btn" class="hidden" disabled>Sarguzashtni Boshlash ❤️</button>
+    </div>
+
+    <!-- Game HUD & Controls -->
+    <div id="game-hud" class="hidden">
+        <div class="hud-top">
+            <span class="hud-title">Abdulhodiy ❤️ Robiya Bibi</span>
+            <div class="hud-status">● Connected (Room: 030326)</div>
+        </div>
+        <div class="hud-quest">
+            <h4 id="quest-title">1-Topshiriq: Birinchi uchrashuv</h4>
+            <p id="quest-desc">Bir-biringizni toping va quchoqlashuv amalini bajaring.</p>
+        </div>
+        <div class="mobile-controls">
+            <div class="joystick-base" id="joystick">
+                <div class="joystick-stick" id="joystick-stick"></div>
+            </div>
+            <div class="action-buttons">
+                <button class="action-btn" id="btn-hug">🤗 Quchoqlash</button>
+                <button class="action-btn" id="btn-hand">🤝 Qo‘l ushlash</button>
+                <button class="action-btn" id="btn-interact">✨ Interaksiya</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js Canvas chiqadigan joy -->
+    <div id="canvas-container"></div>
 
     <script type="module" src="js/game.js"></script>
 </body>
