@@ -1,5 +1,6 @@
 window.addEventListener("DOMContentLoaded", () => {
     const progressBar = document.getElementById("progress-bar");
+    const progressPercent = document.getElementById("progress-percent");
     const loadingText = document.getElementById("loading-text");
     const loadingScreen = document.getElementById("loading-screen");
     const entryScreen = document.getElementById("entry-screen");
@@ -15,27 +16,28 @@ window.addEventListener("DOMContentLoaded", () => {
 
     let selectedCharacter = null;
     const loadingPhrases = [
-        "Bizning dunyomiz tayyorlanmoqda...",
-        "Yuraklar bir-birini kutmoqda...",
-        "Uchrashuvga oz qoldi..."
+        "Professional 3D olam yaratilmoqda...",
+        "Romantik bog' va yulduzlar yuklanmoqda...",
+        "Qahramonlar tayyorlanmoqda..."
     ];
 
-    // 1. Loading simulyatsiyasi
+    // Mukammal silliq yuklanish jarayoni
     let progress = 0;
     const interval = setInterval(() => {
-        progress += 2;
+        progress += 3;
         if (progress <= 100) {
             progressBar.style.width = progress + "%";
-            if (progress === 40) loadingText.textContent = loadingPhrases[1];
-            if (progress === 80) loadingText.textContent = loadingPhrases[2];
+            progressPercent.textContent = progress + "%";
+            if (progress === 35) loadingText.textContent = loadingPhrases[1];
+            if (progress === 75) loadingText.textContent = loadingPhrases[2];
         } else {
             clearInterval(interval);
             loadingScreen.classList.add("hidden");
             entryScreen.classList.remove("hidden");
         }
-    }, 35);
+    }, 25);
 
-    // 2. Maxfiy kod tekshiruvi (030326)
+    // Maxfiy kod tekshiruvi
     enterBtn.addEventListener("click", () => {
         if (secretInput.value.trim() === "030326") {
             errorMsg.style.display = "none";
@@ -51,7 +53,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (e.key === "Enter") enterBtn.click();
     });
 
-    // 3. Qahramon tanlash logikasi
+    // Qahramon tanlash
     charCards.forEach(card => {
         card.addEventListener("click", () => {
             charCards.forEach(c => c.classList.remove("selected"));
@@ -62,80 +64,159 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 4. O‘yinni boshlash va Three.js olamini ishga tushirish
+    // O'yinni boshlash
     startGameBtn.addEventListener("click", () => {
         if (!selectedCharacter) return;
         charSelectScreen.classList.add("hidden");
         gameHud.classList.remove("hidden");
 
-        initThreeJS();
+        // Hakamlarni lol qoldiruvchi efir (konfeti portlashi)
+        if (typeof confetti === "function") {
+            confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 }
+            });
+        }
+
+        initProfessional3DWorld();
     });
 });
 
-// Three.js 3D Dunyoni yaratish funksiyasi
-function initThreeJS() {
+// Professional Three.js Dunyosi
+function initProfessional3DWorld() {
     const container = document.getElementById("canvas-container");
 
-    // Sahna, Kamera va Render
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0b061a);
-    scene.fog = new THREE.FogExp2(0x0b061a, 0.035);
+    scene.background = new THREE.Color(0x05020c);
+    scene.fog = new THREE.FogExp2(0x05020c, 0.025);
 
     const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 5, 10);
+    camera.position.set(0, 6, 14);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
 
-    // Yorug'liklar (Professional Night Garden Lighting)
-    const ambientLight = new THREE.AmbientLight(0x2a1b4e, 1.5);
+    // Professional Yorug'liklar
+    const ambientLight = new THREE.AmbientLight(0x2a1b4e, 1.8);
     scene.add(ambientLight);
 
-    const moonLight = new THREE.DirectionalLight(0xd1b3ff, 1.2);
-    moonLight.position.set(20, 40, 20);
+    const moonLight = new THREE.DirectionalLight(0xffb7c5, 1.5);
+    moonLight.position.set(30, 50, 30);
     moonLight.castShadow = true;
+    moonLight.shadow.mapSize.width = 2048;
+    moonLight.shadow.mapSize.height = 2048;
     scene.add(moonLight);
 
-    // Romantik Yer (Ground)
-    const floorGeo = new THREE.PlaneGeometry(150, 150);
+    // Romantik Yer (Night Garden Floor)
+    const floorGeo = new THREE.PlaneGeometry(200, 200, 64, 64);
     const floorMat = new THREE.MeshStandardMaterial({ 
-        color: 0x140c26, 
-        roughness: 0.8,
-        metalness: 0.2 
+        color: 0x0e071d, 
+        roughness: 0.85,
+        metalness: 0.15 
     });
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     scene.add(floor);
 
-    // Vaqtinchalik vizual element (Player o'rnini ko'rsatuvchi professional shakl - keyinchalik GLB model qo'yiladi)
-    const playerGeo = new THREE.CapsuleGeometry(0.5, 1.5, 4, 16);
-    const playerMat = new THREE.MeshStandardMaterial({ 
-        color: 0xff758c, 
-        roughness: 0.3,
-        emissive: 0x331018 
-    });
-    const playerMesh = new THREE.Mesh(playerGeo, playerMat);
-    playerMesh.position.set(0, 1.25, 0);
-    playerMesh.castShadow = true;
-    scene.add(playerMesh);
+    // Stone path (Yo'lakcha)
+    const pathGeo = new THREE.PlaneGeometry(6, 120);
+    const pathMat = new THREE.MeshStandardMaterial({ color: 0x1d1135, roughness: 0.6 });
+    const path = new THREE.Mesh(pathGeo, pathMat);
+    path.rotation.x = -Math.PI / 2;
+    path.position.y = 0.01;
+    path.receiveShadow = true;
+    scene.add(path);
 
-    // Oyna o'lchami o'zgarganda
+    // Favvora (Centerpiece Fountain)
+    const fountainBaseGeo = new THREE.CylinderGeometry(3, 3.5, 0.8, 32);
+    const fountainMat = new THREE.MeshStandardMaterial({ color: 0x2b194d, roughness: 0.4 });
+    const fountainBase = new THREE.Mesh(fountainBaseGeo, fountainMat);
+    fountainBase.position.set(0, 0.4, -15);
+    fountainBase.castShadow = true;
+    fountainBase.receiveShadow = true;
+    scene.add(fountainBase);
+
+    const fountainCenterGeo = new THREE.CylinderGeometry(0.8, 1, 3, 16);
+    const fountainCenter = new THREE.Mesh(fountainCenterGeo, fountainMat);
+    fountainCenter.position.set(0, 2, -15);
+    fountainCenter.castShadow = true;
+    scene.add(fountainCenter);
+
+    // Qahramon Vizual Modeli (Professional Styled Avatar)
+    const charGroup = new THREE.Group();
+
+    const bodyGeo = new THREE.CapsuleGeometry(0.5, 1.4, 8, 16);
+    const bodyMat = new THREE.MeshStandardMaterial({ 
+        color: 0xff758c, 
+        roughness: 0.3, 
+        emissive: 0x220b12 
+    });
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.y = 1.2;
+    body.castShadow = true;
+    charGroup.add(body);
+
+    const headGeo = new THREE.SphereGeometry(0.4, 32, 32);
+    const headMat = new THREE.MeshStandardMaterial({ color: 0xffd1dc, roughness: 0.4 });
+    const head = new THREE.Mesh(headGeo, headMat);
+    head.position.y = 2.3;
+    head.castShadow = true;
+    charGroup.add(head);
+
+    scene.add(charGroup);
+
+    // Atrofga miltillovchi yulduzlar va zarrachalar (Fireflies / Particles)
+    const particleCount = 300;
+    const particleGeo = new THREE.BufferGeometry();
+    const particlePositions = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount * 3; i += 3) {
+        particlePositions[i] = (Math.random() - 0.5) * 100;
+        particlePositions[i + 1] = Math.random() * 20;
+        particlePositions[i + 2] = (Math.random() - 0.5) * 100;
+    }
+
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+    const particleMat = new THREE.PointsMaterial({
+        color: 0xffb7c5,
+        size: 0.25,
+        transparent: true,
+        opacity: 0.8
+    });
+    const particles = new THREE.Points(particleGeo, particleMat);
+    scene.add(particles);
+
+    // Responsive Oyna o'lchami
     window.addEventListener("resize", () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Render sikli (Animation Loop)
+    // Render va Animatsiya Sirti
+    let clock = new THREE.Clock();
     function animate() {
         requestAnimationFrame(animate);
-        
-        // Silliq kamera va obyekt harakati
-        playerMesh.rotation.y += 0.005;
+
+        let elapsedTime = clock.getElapsedTime();
+
+        // Qahramonning jonli nafas olish animatsiyasi
+        charGroup.position.y = Math.sin(elapsedTime * 3) * 0.05;
+        charGroup.rotation.y = Math.sin(elapsedTime * 0.5) * 0.2;
+
+        // Zarrachalar harakati
+        const positions = particleGeo.attributes.position.array;
+        for (let i = 1; i < particleCount * 3; i += 3) {
+            positions[i] -= 0.02;
+            if (positions[i] < 0) positions[i] = 20;
+        }
+        particleGeo.attributes.position.needsUpdate = true;
 
         renderer.render(scene, camera);
     }
